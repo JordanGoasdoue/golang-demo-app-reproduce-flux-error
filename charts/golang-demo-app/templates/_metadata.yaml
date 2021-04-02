@@ -5,6 +5,7 @@ It creates a 'metadata:' section with name, labels and annotations.
 {{ define "wrapper.metadata.tpl" -}}
 {{- $ := get . "top" | default $ -}}
 metadata:
+  namespace: {{ $.Release.Namespace }}
   name: {{ $.Release.Name }}
   labels:
     app.kubernetes.io/name: {{ $.Chart.Name }}
