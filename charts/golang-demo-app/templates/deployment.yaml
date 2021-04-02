@@ -50,4 +50,6 @@ spec:
 {{- define "wrapper.deployment.metadata" -}}
 {{- $ := get . "top" | default $ -}}
 metadata:
+  namespace: {{ $.Release.Namespace }}
+  name: {{ $.Release.Name }}
 {{- end -}}{{- /* define "wrapper.deployment.metadata" */ -}}
