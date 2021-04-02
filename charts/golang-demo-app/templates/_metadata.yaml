@@ -1,0 +1,19 @@
+{{- /*
+wrapper.metadata creates a standard metadata header.
+It creates a 'metadata:' section with name, labels and annotations.
+*/ -}}
+{{ define "wrapper.metadata.tpl" -}}
+{{- $ := get . "top" | default $ -}}
+metadata:
+  namespace: {{ $.Release.Namespace }}
+  name: {{ $.Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ $.Chart.Name }}
+    helm.sh/chart: {{ $.Chart.Name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+{{- end -}}
+
+{{- define "wrapper.metadata" -}}
+{{- template "wrapper.util.merge" (set . "default" "wrapper.metadata.tpl") -}}
+{{- end -}}

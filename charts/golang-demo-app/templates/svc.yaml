@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+{{ include "wrapper.metadata" (dict "top" $ "overrides" "wrapper.service.metadata") }}
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    service: {{ $.Chart.Name }}
+
+{{- define "wrapper.service.metadata" -}}
+{{- $ := get . "top" | default $ -}}
+metadata:
+{{- end -}}{{- /* define "wrapper.service.metadata" */ -}}

@@ -1,0 +1,28 @@
+{{- /*
+wrapper.util.merge will merge two YAML templates and output the result.
+This takes a dict (map) of 2 or 3 entries:
+- "top" (mandatory): the top context
+- "default" (mandatory): the name of the default template
+- "overrides" (optional): the name of the template with the overrides - or a list of names
+*/ -}}
+{{- define "wrapper.util.merge" -}}
+{{- $ := get . "top" | default $ -}}
+{{- $ctx := . -}}
+{{- $default := fromYaml (include (get . "default") .) | default dict -}}
+{{- $tpl := $default -}}
+{{- if hasKey . "overrides" -}}
+  {{- if (kindIs "string" (get . "overrides")) -}}
+    {{- $overrides := fromYaml (include (get . "overrides") .) | default dict -}}
+    {{- $tpl = mergeOverwrite $default $overrides -}}
+  {{- else -}}
+    {{- $overrides := get . "overrides" | default list -}}
+    {{- range $overrides -}}
+      {{- $tplOverrides := fromYaml (include . $ctx) | default dict -}}
+      {{- $tpl = mergeOverwrite $tpl $tplOverrides -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- with $tpl -}}
+  {{- toYaml . -}}
+{{- end -}}
+{{- end -}}
